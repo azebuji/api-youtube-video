@@ -124,7 +124,7 @@ npm run build
 **Exemplo de Chamada:**
 
 ```
-http://localhost:9070/general?dailyLimits=[15,120,30,150,20,40,90]&search=termo_de_pesquisa
+http://localhost:9070/general?dailyLimits=[15,120,30,150,20,40,90]&search=termo_de_pesquisa&type=google-api
 ```
 **Exemplo de Resposta:**
 
