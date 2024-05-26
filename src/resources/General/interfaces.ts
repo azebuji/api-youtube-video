@@ -48,3 +48,5 @@ interface FileDetails {
     bitrateBps: number;
     creationTime: string;
 }
+
+export interface Parameters { search: string, dailyLimits: Array<number>, type: "google-api" | "pattern" }

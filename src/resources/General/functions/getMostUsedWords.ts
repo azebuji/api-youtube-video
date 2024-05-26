@@ -4,7 +4,7 @@ export function getMostUsedWords(videos: { title: string; description: string }[
         "a", "o", "um", "uma", "para", "com", "de", "do", "da", "no", "na", "em", "por",
         "se", "que", "e", "é", "são", "ao", "à", "os", "as", "nao", "não", "ou", "em", "por", "nos",
         "nas", "pelo", "pela", "pelos", "pelas", "como", "mas", "para", "mais", "muito", "ainda", "também",
-        "a", "an", "the", "and", "or", "of", "in", "on", "at", "for", "to", "with", "by", "from"
+        "a", "an", "the", "and", "or", "of", "in", "on", "at", "for", "to", "with", "by", "from", "la", "en"
     ]);
 
     videos.forEach(video => {
