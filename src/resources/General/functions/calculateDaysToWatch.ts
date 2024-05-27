@@ -5,7 +5,7 @@ export function calculateDaysToWatch(videos, dailyLimits) {
     // Loop para os 200 primeiros vídeos
     for (let i = 0; i < Math.min(videos.length, 200); i++) {
         const video = videos[i];
-        const duration = parseInt(video.duration); // Converter a duração para número
+        const duration = parseInt(video.duration);
 
         // Verificar se o vídeo pode ser assistido no mesmo dia
         if (duration <= currentDayTime) {
@@ -17,11 +17,12 @@ export function calculateDaysToWatch(videos, dailyLimits) {
                 // Ignorar o vídeo se a duração for maior que o limite diário
                 continue;
             }
-            currentDayTime = dailyLimits[days] - duration; // Reduzir o tempo disponível no próximo dia
+            //subtrai o tempo que sobrou do proximo dia
+            currentDayTime = dailyLimits[days] - duration;
         }
     }
 
-    // Verificar se há tempo restante no último dia
+    // verifica se há tempo ainda no último dia
     if (currentDayTime < dailyLimits[days]) {
         days++;
     }

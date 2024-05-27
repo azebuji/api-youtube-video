@@ -9,11 +9,3 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
-
-model Login {
-  uuid_login  String @id @default(uuid())
-  name_login  String @unique @db.VarChar(60)
-  name_person String
-
-  @@map("login")
-}

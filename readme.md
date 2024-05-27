@@ -49,16 +49,6 @@ Considerando a semana definida acima e a pesquisa retornando 10 vídeos com as s
     npm install ou yarn
 ```
 
-3. Execute as migrations do Prisma
-```bash
-    npm run migration
-```
-
-4. Rode as seeds para popular a base com dados
-```bash
-    npm run seed
-```
-
 ## Rodando o projeto
 
 ### Ambiente de desenvolvimento
@@ -71,33 +61,7 @@ Considerando a semana definida acima e a pesquisa retornando 10 vídeos com as s
 ```
 
 ### Outros Comandos Úteis
-* Testes:
 
-```bash
-npm run test
-```
-
-* Gerar Migrations:
-
-```bash
-npm run migrations
-```
-
-* Pull do Banco de Dados:
-```bash
-npm run pull
-```
-
-Gerar Arquivos do Prisma:
-
-```bash
-npm run generate
-```
-* Seed do Banco de Dados:
-
-```bash
-npm run seed
-```
 * Build do Projeto:
 
 ```bash
@@ -118,8 +82,8 @@ npm run build
 - `search` (string): Termo de pesquisa para buscar vídeos no YouTube.
 - `type` (string): Indica o tipo de busca a ser realizada para obter os vídeos.
   - Valores permitidos:
-    - 'google-api': Utiliza a API do Google YouTube para buscar os vídeos.
-    - 'pattern': Utiliza dados padrões para teste local, sem consultar a API do Google. Note que a funcionalidade de pesquisa não funcionará neste modo se as quotas da API estiverem esgotadas.
+    - 'google-api': Utiliza a API do Google YouTube para buscar os vídeos. Note que a funcionalidade de pesquisa não funcionará neste modo se as quotas da API estiverem esgotadas.
+    - 'pattern': Utiliza dados padrões para teste local, sem consultar a API do Google. 
 
 **Exemplo de Chamada:**
 

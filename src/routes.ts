@@ -1,10 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
-
 import corsConfig from './global/utils/corsConfig';
-
-
-
-import Login from './resources/Login/routes';
 import General from './resources/General/routes';
 
 const routes = express.Router();
@@ -20,8 +15,6 @@ routes.get('/api-status', (request, response) =>
 
 corsConfig(routes);
 
-
-routes.use('/login', Login);
 routes.use('/general', General)
 
 //Rotas não existentes

@@ -1,10 +1,11 @@
 import axios from "axios";
-import jsonListVideos from './dataMocada/listVideos.json';
+
 import jsonDurationListVideos from './dataMocada/listDetailedVideos.json'
-import { Parameters, VideoListResponse } from "./interfaces";
-import { getMostUsedWords } from "./functions/getMostUsedWords";
+import jsonListVideos from './dataMocada/listVideos.json';
 import { calculateDaysToWatch } from "./functions/calculateDaysToWatch";
 import { convertISO8601ToMs } from "./functions/convertISO8601ToMs";
+import { getMostUsedWords } from "./functions/getMostUsedWords";
+import { Parameters, VideoListResponse } from "./interfaces";
 
 export async function findVideos({ search, dailyLimits, type }: Parameters) {
 
@@ -69,9 +70,8 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
 
             for (const item of response.data.items) {
                 const durationMinutes = convertISO8601ToMs(item.contentDetails.duration);
-                item.contentDetails.duration = String(convertISO8601ToMs(item.contentDetails.duration)); // Converte duration para string
+                item.contentDetails.duration = String(convertISO8601ToMs(item.contentDetails.duration)); 
 
-                // Adiciona o item completo ao array videos
                 videos.push(item);
             }
         }
@@ -87,68 +87,6 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
 
     const mostUsedWords = getMostUsedWords(videosFormated);
     const daysNeeded = calculateDaysToWatch(videosFormated, dailyLimits);
-
-
-    /* for (let page = 1; page <= numPages; page++) {
-         videos = 
-     }*/
-
-
-
-    /* for (let page = 1; page <= numPages; page++) {
-         response = await axios.get(process.env.GOOGLE_YOUTUBE_API_URL + "/search", {
-            params: {
-    part: 'snippet',
-    maxResults: maxResultsPerPage,
-    pageToken: 'CAoQAA',
-    q: search,
-    type: 'video',
-    key: process.env.GOOGLEKEY,
-  },
-  headers: {
-    Accept: 'application/json',
-  },
-         });
- 
-         //console.log(response.data)
-         videosId = videosId.concat(response.data.items.map(item => item.id.videoId));
- 
-     }/*
- 
- 
-     /*  for (let page = 1; page <= numPages; page++) {
-           response = await axios.get(process.env.GOOGLE_YOUTUBE_API_URL + "/video", {
-               params: {
-                   type: 'video',
-                   part: 'snippet',
-                   q: search,
-                   key: process.env.GOOGLEKEY,
-                   pageToken: 'CAoQAA',
-                   maxResults: maxResultsPerPage,
-               },
-           });
-   
-           //console.log(response.data)
-           videosId = videosId.concat(response.data.items.map(item => item.id.videoId));
-   
-       }*/
-
-
-    /*videos = videos.concat(response.data.items.map(item => ({
-        id: item.snippet.title,
-        description: item.snippet.description,
-        // duration: item.contentDetails.duration,
-    })));*/
-    //console.log(videos.length)
-    //const mostUsedWords = getMostUsedWords(videos);
-    //const daysNeeded = calculateDaysToWatch(videos, dailyLimitsArray);
-
-
-    /*const videos = response.data.items.map(item => ({
-        title: item.snippet.title,
-        description: item.snippet.description,
-        duration: item.contentDetails.duration, // Assumindo que temos um campo duration
-    }));*/
 
 
     return { videosFormated, mostUsedWords, daysNeeded }
