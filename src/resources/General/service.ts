@@ -1,14 +1,16 @@
 import axios from "axios";
+import fs from 'fs';
 
-import jsonDurationListVideos from './dataMocada/listDetailedVideos.json'
-import jsonListVideos from './dataMocada/listVideos.json';
+
 import { calculateDaysToWatch } from "./functions/calculateDaysToWatch";
-import { convertISO8601ToMs } from "./functions/convertISO8601ToMs";
+import { convertISO8601ToMinutes } from "./functions/convertISO8601ToMs";
 import { getMostUsedWords } from "./functions/getMostUsedWords";
 import { Parameters, VideoListResponse } from "./interfaces";
+import path from "path";
 
 export async function findVideos({ search, dailyLimits, type }: Parameters) {
-
+    const jsonDurationListVideos = JSON.parse(fs.readFileSync(path.resolve("src", "resources", "General", "dataMocada", "listDetailedVideos.json")).toString("utf8"));
+    const jsonListVideos = JSON.parse(fs.readFileSync(path.resolve("src", "resources", "General", "dataMocada", "listVideos.json")).toString("utf8"));
     const qtdVideosInJson = 10
 
     const maxResultsPerPage = 10; //limite da api do google youtube é 10
@@ -25,18 +27,17 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
     let videosId: Array<string> = [] //Array para armazenar todos os ids dos videos
 
     if (type === "pattern") {
-        for (let page = 0; page <= qtdVideosInJson; page++) {
-
-            videosId = videosId.concat(jsonListVideos.items[page].id.videoId)
-
+        for (let page = 0; page < qtdVideosInJson; page++) {
+            videosId = videosId.concat(jsonListVideos.items[page].id.videoId);
         }
-        for (let page = 0; page <= videosId.length; page++) {
-            let video = jsonDurationListVideos.items.find((elem) => elem.id === videosId[page]);
+
+        for (const videoId of videosId) {
+            let video = jsonDurationListVideos.items.find((elem) => elem.id === videoId);
 
             if (video) {
-                const durationMinutes = convertISO8601ToMs(video?.contentDetails.duration);
-                video.contentDetails.duration = String(convertISO8601ToMs(video.contentDetails.duration));
-                videos = videos.concat(video)
+                const durationMinutes = convertISO8601ToMinutes(video.contentDetails.duration);
+                video.contentDetails.duration = String(durationMinutes);
+                videos = videos.concat(video);
             }
         }
     } else {
@@ -52,7 +53,6 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
                 },
             });
 
-            //console.log(response.data)
             videosId = videosId.concat(response.data.items.map(item => item.id.videoId));
 
         }
@@ -69,8 +69,8 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
             });
 
             for (const item of response.data.items) {
-                const durationMinutes = convertISO8601ToMs(item.contentDetails.duration);
-                item.contentDetails.duration = String(convertISO8601ToMs(item.contentDetails.duration)); 
+                const durationMinutes = convertISO8601ToMinutes(item.contentDetails.duration);
+                item.contentDetails.duration = String(durationMinutes);
 
                 videos.push(item);
             }
@@ -87,7 +87,6 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
 
     const mostUsedWords = getMostUsedWords(videosFormated);
     const daysNeeded = calculateDaysToWatch(videosFormated, dailyLimits);
-
 
     return { videosFormated, mostUsedWords, daysNeeded }
 }

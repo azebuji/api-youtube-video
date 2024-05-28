@@ -31,7 +31,7 @@ Considerando a semana definida acima e a pesquisa retornando 10 vídeos com as s
 
 ## Principais tecnologias usadas
 
-- Node.js
+- Node.js 16.14.2
 - Express.js
 - Axios.js
 - CORS
