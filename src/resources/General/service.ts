@@ -1,30 +1,30 @@
 import axios from "axios";
 import fs from 'fs';
-
+import path from "path";
 
 import { calculateDaysToWatch } from "./functions/calculateDaysToWatch";
+import { chunkArray } from "./functions/chunckArray";
 import { convertISO8601ToMinutes } from "./functions/convertISO8601ToMs";
 import { getMostUsedWords } from "./functions/getMostUsedWords";
 import { Parameters, VideoListResponse } from "./interfaces";
-import path from "path";
 
 export async function findVideos({ search, dailyLimits, type }: Parameters) {
     const jsonDurationListVideos = JSON.parse(fs.readFileSync(path.resolve("src", "resources", "General", "dataMocada", "listDetailedVideos.json")).toString("utf8"));
     const jsonListVideos = JSON.parse(fs.readFileSync(path.resolve("src", "resources", "General", "dataMocada", "listVideos.json")).toString("utf8"));
-    const qtdVideosInJson = 10
 
+    const qtdVideosInJson = 200
     const maxResultsPerPage = 10; //limite da api do google youtube é 10
-    const totalResults = 10; //máximo de resultados por consulta, no caso da regra é 200 por véz
-    const numPages = Math.ceil(totalResults / maxResultsPerPage); //Faz o cálculo do número de páginas
+    const totalResults = 200; //máximo de resultados por consulta, no caso da regra é 200 por véz
+    const numPages = Math.ceil(totalResults / maxResultsPerPage); //nro páginas
     let response;
 
-    let videos: VideoListResponse['items'] = []; // Array para armazenar todos os vídeos
+    let videos: VideoListResponse['items'] = [];
+    let videosId: Array<string> = [];
     let videosFormated: Array<{
         title: string;
         description: string;
         duration: string;
     }>
-    let videosId: Array<string> = [] //Array para armazenar todos os ids dos videos
 
     if (type === "pattern") {
         for (let page = 0; page < qtdVideosInJson; page++) {
@@ -41,7 +41,9 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
             }
         }
     } else {
-        for (let page = 1; page <= numPages; page++) {
+
+
+        for (let page = 0; page < numPages; page++) {
             response = await axios.get(process.env.GOOGLE_YOUTUBE_API_URL + "/search", {
                 params: {
                     type: 'video',
@@ -51,21 +53,27 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
                     pageToken: 'CAoQAA',
                     maxResults: maxResultsPerPage,
                 },
+            }).catch((error) => {
+                console.log("erro na requisição", error)
             });
 
             videosId = videosId.concat(response.data.items.map(item => item.id.videoId));
 
         }
 
-        for (let page = 1; page <= numPages; page++) {
+        const videoChunks: string[][] = chunkArray(videosId, 10);
+        for (let page = 0; page < numPages; page++) {
+            let chunk: string[] = videoChunks[page];
             response = await axios.get(process.env.GOOGLE_YOUTUBE_API_URL + "/videos", {
                 params: {
                     type: 'video',
                     part: 'snippet,contentDetails',
-                    id: videosId.join(','),
+                    id: chunk.join(','),
                     key: process.env.GOOGLEKEY,
                     maxResults: maxResultsPerPage,
                 },
+            }).catch((e) => {
+                console.log("erro no segundo for", e)
             });
 
             for (const item of response.data.items) {
@@ -76,7 +84,6 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
             }
         }
     }
-
 
 
     videosFormated = videos.map(item => ({
