@@ -12,9 +12,9 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
     const jsonDurationListVideos = JSON.parse(fs.readFileSync(path.resolve("src", "resources", "General", "dataMocada", "listDetailedVideos.json")).toString("utf8"));
     const jsonListVideos = JSON.parse(fs.readFileSync(path.resolve("src", "resources", "General", "dataMocada", "listVideos.json")).toString("utf8"));
 
-    const qtdVideosInJson = 10
+    const qtdVideosInJson = 200
     const maxResultsPerPage = 10; //limite da api do google youtube é 10
-    const totalResults = 10; //máximo de resultados por consulta, no caso da regra é 200 por véz
+    const totalResults = 200; //máximo de resultados por consulta, no caso da regra é 200 por véz
     const numPages = Math.ceil(totalResults / maxResultsPerPage); //nro páginas
     let response;
 
