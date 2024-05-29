@@ -24,6 +24,7 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
         title: string;
         description: string;
         duration: string;
+        mostUsedWords: string[];
     }>
 
     if (type === "pattern") {
@@ -86,14 +87,23 @@ export async function findVideos({ search, dailyLimits, type }: Parameters) {
     }
 
 
-    videosFormated = videos.map(item => ({
-        title: item.snippet.title,
-        description: item.snippet.description,
-        duration: item.contentDetails.duration,
-    }));
 
-    const mostUsedWords = getMostUsedWords(videosFormated);
+
+    videosFormated = videos.map(item => {
+        const mostUsedWords = getMostUsedWords([{
+            title: item.snippet.title,
+            description: item.snippet.description,
+        }]);
+
+        return {
+            title: item.snippet.title,
+            description: item.snippet.description,
+            duration: item.contentDetails.duration,
+            mostUsedWords,
+        };
+    });
+
     const daysNeeded = calculateDaysToWatch(videosFormated, dailyLimits);
 
-    return { videosFormated, mostUsedWords, daysNeeded }
+    return { videosFormated, daysNeeded }
 }

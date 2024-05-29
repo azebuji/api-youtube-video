@@ -98,16 +98,16 @@ http://localhost:9070/general?dailyLimits=[15,120,30,150,20,40,90]&search=termo_
         {
             "title": "Título do Vídeo",
             "description": "Descrição do Vídeo",
-            "duration": 60
+            "duration": 60,
+            "mostUsedWords": [
+                "brinquedos",
+                "reino",
+                "dos",
+                "falantes",
+                "aventura"
+            ]
         },
         // Outros vídeos...
-    ],
-    "mostUsedWords": [
-        "aventura",
-        "descubra",
-        "preparese",
-        "mágica",
-        "nesta"
     ],
     "daysNeeded": 0
 }
